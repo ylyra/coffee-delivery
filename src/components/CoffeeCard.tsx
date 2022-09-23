@@ -3,7 +3,7 @@ import { Heading } from "./Heading";
 
 export function CoffeeCard() {
   return (
-    <div className="bg-white-700 p-6 flex flex-col items-center rounded-tl-md rounded-br-md rounded-bl-[36px] rounded-tr-[36px] ">
+    <div className="bg-white-700 p-6 flex flex-col items-center rounded-tl-md rounded-br-md rounded-bl-[36px] rounded-tr-[36px]">
       <img
         src="/coffee.webp"
         alt="Coffee mug"

@@ -14,10 +14,7 @@ export function Heading({
 }: HeadingProps) {
   return createElement(type, {
     children,
-    className: clsx(
-      "text-3xl text-black-900 font-extrabold font-cursive",
-      className
-    ),
+    className: clsx(className, "text-3xl font-extrabold font-cursive"),
     ...props,
   });
 }

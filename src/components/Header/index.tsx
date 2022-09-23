@@ -15,8 +15,12 @@ export function Header() {
             <span>Porto Alegre, RS</span>
           </button>
 
-          <button className="p-2 flex items-center gap-1 text-sm text-yellow-900 rounded-md bg-yellow-50 hover:bg-yellow-200 transition-colors">
+          <button className="relative p-2 flex items-center gap-1 text-sm text-yellow-900 rounded-md bg-yellow-50 hover:bg-yellow-200 transition-colors">
             <ShoppingCart size={22} weight="fill" />
+
+            <span className="absolute -top-1/2 -right-1/2 bg-yellow-900 rounded-full w-5 h-5 text-xs text-white-900 tracking-tighter flex items-center justify-center -translate-x-1/2 translate-y-1/2">
+              2
+            </span>
           </button>
         </div>
       </Container>

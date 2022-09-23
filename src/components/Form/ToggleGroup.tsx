@@ -1,16 +1,17 @@
 import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
 import clsx from "clsx";
-import { HTMLAttributes, useState } from "react";
-import { Controller, FieldError, Merge } from "react-hook-form";
+import { Icon as IconProps } from "phosphor-react";
+import { Controller, FieldError } from "react-hook-form";
 
-type ToggleGroupProps = ToggleGroupPrimitive.ToggleGroupMultipleProps & {
+type ToggleGroupProps = ToggleGroupPrimitive.ToggleGroupSingleProps & {
   control: any;
   name: string;
   options: {
     label: string;
     value: string;
+    icon?: IconProps;
   }[];
-  error?: Merge<FieldError, (FieldError | undefined)[]>;
+  error?: FieldError;
 };
 
 export function ToggleGroup({
@@ -33,21 +34,21 @@ export function ToggleGroup({
             onValueChange={onChange}
             {...props}
           >
-            {options.map((option) => (
+            {options.map(({ label, value: iValue, icon: Icon }) => (
               <ToggleGroupPrimitive.Item
                 className={clsx(
-                  "w-10 h-10 rounded flex items-center justify-center ",
+                  "flex items-center gap-3 p-4 rounded-md bg-white-400 border border-white-400 text-xs text-black-200 justify-center flex-1 hover:bg-white-300 transition-all",
                   {
-                    "bg-violet-400": value.includes(option.value),
-                    "bg-zinc-900": !value.includes(option.value),
+                    "bg-purple-50 border-purple-500": value === iValue,
                   }
                 )}
                 type="button"
-                title={option.label}
-                value={option.value}
-                key={option.label}
+                title={label}
+                value={iValue}
+                key={label}
               >
-                {option.label.substring(0, 1)}
+                {Icon && <Icon className="text-purple-500" size={16} />}
+                {label}
               </ToggleGroupPrimitive.Item>
             ))}
           </ToggleGroupPrimitive.Root>

@@ -12,7 +12,7 @@ export function Container({
 }: ContainerProps) {
   return (
     <section
-      className={clsx("max-w-[1168px] w-full mx-auto px-6", className)}
+      className={clsx(className, "max-w-[1168px] w-full mx-auto px-6")}
       {...props}
     >
       {children}

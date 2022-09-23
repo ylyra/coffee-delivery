@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import {
   forwardRef,
   ForwardRefRenderFunction,
@@ -11,11 +12,11 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { label, id, error, ...props },
+  { label, id, error, className, required, ...props },
   ref
 ) => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={clsx(className, "flex flex-col gap-2")}>
       {label && (
         <label
           htmlFor={id}
@@ -24,12 +25,26 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
           {label}
         </label>
       )}
-      <input
-        className="form-input bg-zinc-900 border-zinc-900 rounded px-4 py-3 text-sm  placeholder:text-zinc-500"
-        id={id}
-        ref={ref}
-        {...props}
-      />
+
+      <div className={clsx(className, "w-full relative")}>
+        <input
+          className={clsx(
+            className,
+            "form-input bg-white-500 border-white-400 rounded p-3 text-sm  placeholder:text-black-200 w-full",
+            {
+              "pr-16": !required,
+            }
+          )}
+          id={id}
+          ref={ref}
+          {...props}
+        />
+        {!required && (
+          <span className="absolute top-1/2 right-3 text-xs italic text-black-200 -translate-y-1/2 pointer-events-none">
+            Opcional
+          </span>
+        )}
+      </div>
       {!!error && <div className="text-base text-red-500">{error.message}</div>}
     </div>
   );
