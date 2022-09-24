@@ -63,9 +63,7 @@ const MainPage = () => {
         <Heading className="mb-4">Nossos cafés</Heading>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 gap-y-10 flex-wrap">
-          {[...new Array(20)].map((_, key) => (
-            <CoffeeCard key={key} />
-          ))}
+          <CoffeeCard />
         </div>
       </Container>
     </>

@@ -6,6 +6,7 @@ import "./styles/main.css";
 
 import routes from "~react-pages";
 import { Header } from "./components/Header";
+import { CartProvider } from "./contexts/CartDisclosure";
 
 function App() {
   return <Suspense fallback={<p>Loading...</p>}>{useRoutes(routes)}</Suspense>;
@@ -14,10 +15,10 @@ function App() {
 const app = createRoot(document.getElementById("root")!);
 
 app.render(
-  <StrictMode>
-    <Header />
+  <CartProvider>
     <Router>
+      <Header />
       <App />
     </Router>
-  </StrictMode>
+  </CartProvider>
 );

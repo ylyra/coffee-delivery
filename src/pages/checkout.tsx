@@ -7,11 +7,11 @@ import {
   Minus,
   Money,
   Plus,
-  ShoppingCart,
   Trash,
 } from "phosphor-react";
-import { useCallback } from "react";
+import { Fragment, useCallback, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 import { Container } from "../components";
@@ -21,6 +21,8 @@ import { Input } from "../components/Form/Input";
 import { ToggleGroup } from "../components/Form/ToggleGroup";
 import { Head } from "../components/Head";
 import { Heading } from "../components/Heading";
+import { useCart } from "../hooks/useCart";
+import { formatPrice } from "../utils/format";
 
 const schema = z.object({
   cep: z.string(),
@@ -37,6 +39,13 @@ const schema = z.object({
 });
 
 const MainPage = () => {
+  const {
+    cart,
+    handleRemoveFromCart,
+    handleAddItemToCart,
+    handleRemoveQuantityFromCart,
+    handleClearCart,
+  } = useCart();
   const { control, formState, handleSubmit, register } = useForm<
     z.infer<typeof schema>
   >({
@@ -50,13 +59,22 @@ const MainPage = () => {
       state: "",
     },
   });
+  const navigate = useNavigate();
 
   const onCheckoutSubmit: SubmitHandler<z.infer<typeof schema>> = useCallback(
     (data) => {
       console.log(data);
+      navigate("/success");
+      handleClearCart();
     },
     []
   );
+
+  useEffect(() => {
+    if (!cart || cart.totals.itens === 0) {
+      navigate("/");
+    }
+  }, [cart?.itens]);
 
   return (
     <form onSubmit={handleSubmit(onCheckoutSubmit)}>
@@ -175,101 +193,70 @@ const MainPage = () => {
             Cafés selecionados
           </Heading>
           <div className="p-10 bg-white-700 rounded-md flex flex-col gap-6 rounded-tl-md rounded-br-md rounded-bl-[44px] rounded-tr-[44px]">
-            <div className="flex justify-between items-center">
-              <div className="flex gap-5 items-center">
-                <img
-                  src="/coffee.webp"
-                  alt=""
-                  className="max-w-[64px] object-contain"
-                  loading="lazy"
-                />
+            {cart &&
+              cart.itens.map((item) => (
+                <Fragment key={item.id}>
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-5 items-center">
+                      <img
+                        src="/coffee.webp"
+                        alt=""
+                        className="max-w-[64px] object-contain"
+                        loading="lazy"
+                      />
 
-                <div className="flex flex-col gap-2">
-                  <h4 className="text-base text-black-600">
-                    Expresso Tradicional
-                  </h4>
-                  <div className="flex items-center gap-2">
-                    <div className="bg-white-400 rounded-md p-2 h-9 flex items-center gap-1">
-                      <button
-                        type="button"
-                        className="text-purple-500 hover:text-purple-900"
-                      >
-                        <Minus size={14} />
-                      </button>
-                      <span className="text-black-900">1</span>
-                      <button
-                        type="button"
-                        className="text-purple-500 hover:text-purple-900"
-                      >
-                        <Plus size={14} />
-                      </button>
+                      <div className="flex flex-col gap-2">
+                        <h4 className="text-base text-black-600">
+                          Expresso Tradicional
+                        </h4>
+                        <div className="flex items-center gap-2">
+                          <div className="bg-white-400 rounded-md p-2 h-9 flex items-center gap-1">
+                            <button
+                              type="button"
+                              className="text-purple-500 hover:text-purple-900"
+                              onClick={() =>
+                                handleRemoveQuantityFromCart(item.id, 1)
+                              }
+                            >
+                              <Minus size={14} />
+                            </button>
+                            <span className="text-black-900">
+                              {item.quantity}
+                            </span>
+                            <button
+                              type="button"
+                              className="text-purple-500 hover:text-purple-900"
+                              onClick={() =>
+                                handleAddItemToCart({
+                                  ...item,
+                                  quantity: 1,
+                                })
+                              }
+                            >
+                              <Plus size={14} />
+                            </button>
+                          </div>
+
+                          <button
+                            type="button"
+                            className="bg-white-400 hover:bg-white-300 transition-colors rounded-md p-2 h-9 flex items-center gap-1 text-xs text-black-600"
+                            onClick={() => handleRemoveFromCart(item.id)}
+                          >
+                            <Trash size={16} className="text-purple-900" />
+                            REMOVER
+                          </button>
+                        </div>
+                      </div>
                     </div>
 
-                    <button
-                      type="button"
-                      className="bg-white-400 hover:bg-white-300 transition-colors rounded-md p-2 h-9 flex items-center gap-1 text-xs text-black-600"
-                    >
-                      <Trash size={16} className="text-purple-900" />
-                      REMOVER
-                    </button>
+                    <strong className="block font-cursive font-black-400">
+                      R$ 9,90
+                    </strong>
                   </div>
-                </div>
-              </div>
 
-              <strong className="block font-cursive font-black-400">
-                R$ 9,90
-              </strong>
-            </div>
-
-            <Divider />
-
-            <div className="flex justify-between items-center">
-              <div className="flex gap-5 items-center">
-                <img
-                  src="/coffee.webp"
-                  alt=""
-                  className="max-w-[64px] object-contain"
-                  loading="lazy"
-                />
-
-                <div className="flex flex-col gap-2">
-                  <h4 className="text-base text-black-600">
-                    Expresso Tradicional
-                  </h4>
-                  <div className="flex items-center gap-2">
-                    <div className="bg-white-400 rounded-md p-2 h-9 flex items-center gap-1">
-                      <button
-                        type="button"
-                        className="text-purple-500 hover:text-purple-900"
-                      >
-                        <Minus size={14} />
-                      </button>
-                      <span className="text-black-900">1</span>
-                      <button
-                        type="button"
-                        className="text-purple-500 hover:text-purple-900"
-                      >
-                        <Plus size={14} />
-                      </button>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="bg-white-400 hover:bg-white-300 transition-colors rounded-md p-2 h-9 flex items-center gap-1 text-xs text-black-600"
-                    >
-                      <Trash size={16} className="text-purple-900" />
-                      REMOVER
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <strong className="block font-cursive font-black-400">
-                R$ 9,90
-              </strong>
-            </div>
-
-            <Divider />
+                  <Divider />
+                </Fragment>
+              ))}
 
             <div className="flex flex-col gap-3">
               <div className="flex gap-2 justify-between itens-center">
@@ -277,17 +264,21 @@ const MainPage = () => {
                   Total de itens
                 </small>
 
-                <span className="block text-base font-black-400">R$ 29,70</span>
+                <span className="block text-base font-black-400">
+                  {formatPrice(cart?.totals.price ?? 0)}
+                </span>
               </div>
               <div className="flex gap-2 justify-between itens-center">
                 <small className="block text-sm font-black-400">Entrega</small>
 
-                <span className="block text-base font-black-400">R$ 29,70</span>
+                <span className="block text-base font-black-400">
+                  {formatPrice(29.99)}
+                </span>
               </div>
               <div className="flex gap-2 justify-between itens-center text-xl font-black-600 font-bold">
                 <small className="text-xl">Total</small>
 
-                <span>R$ 29,70</span>
+                <span>{formatPrice((cart?.totals.price ?? 0) + 29.99)}</span>
               </div>
             </div>
 
