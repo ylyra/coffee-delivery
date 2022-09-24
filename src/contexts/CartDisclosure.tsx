@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useCallback, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 interface ICartItemProps {
   id: string;
@@ -116,6 +122,17 @@ export function CartProvider({ children }: ICartProvider) {
       return newCart;
     });
   }, []);
+
+  useEffect(() => {
+    if (cart) {
+      localStorage.setItem("@coffee-delivery:cart", JSON.stringify(cart));
+    } else {
+      const localStorageCart = localStorage.getItem("@coffee-delivery:cart");
+      if (localStorageCart) {
+        setCart(JSON.parse(localStorageCart));
+      }
+    }
+  }, [cart]);
 
   return (
     <CartDisclosure.Provider
