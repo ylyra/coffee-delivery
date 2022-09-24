@@ -129,7 +129,18 @@ export function CartProvider({ children }: ICartProvider) {
     } else {
       const localStorageCart = localStorage.getItem("@coffee-delivery:cart");
       if (localStorageCart) {
-        setCart(JSON.parse(localStorageCart));
+        const cartParsed = JSON.parse(localStorageCart) as ICartProps;
+        cartParsed.itens = cartParsed.itens.map((item) => ({
+          ...item,
+          price: Number(item.price),
+          quantity: Number(item.quantity),
+        }));
+        cartParsed.totals = {
+          ...cartParsed.totals,
+          price: Number(cartParsed.totals.price),
+          itens: Number(cartParsed.totals.itens),
+        };
+        setCart(cartParsed);
       }
     }
   }, [cart]);
